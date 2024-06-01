@@ -37,5 +37,6 @@ jobs:
     - name: Set PYTHONPATH
       run: |
         echo "::set-env name=PYTHONPATH::$(pwd)"
+    - name: Test with pytest
       run: |
         pytest
