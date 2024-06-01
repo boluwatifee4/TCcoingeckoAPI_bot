@@ -117,8 +117,11 @@ async def send_coin_message(context: ContextTypes.DEFAULT_TYPE):
         coins, _ = fetch_trending_data()
         trending_coins = process_trending_coins(coins)
         if trending_coins:
-            message = format_coin_message(user_preferences[user_id], trending_coins)
-            await context.bot.send_photo(chat_id=user_id, photo=trending_coins['thumb_url'], caption=message)
+            for coin in trending_coins:
+                coin_message = format_coin_message(user_preferences[user_id], coin)
+                await context.bot.send_photo(chat_id=user_id, photo=coin['thumb_url'], caption=coin_message)
+            # message = format_coin_message(user_preferences[user_id], trending_coins)
+            # await context.bot.send_photo(chat_id=user_id, photo=trending_coins['thumb_url'], caption=message)
         else:
             await context.bot.send_message(chat_id=user_id, text="Failed to fetch trending coins.")
 
@@ -128,8 +131,11 @@ async def send_nft_message(context: ContextTypes.DEFAULT_TYPE):
         _, nfts = fetch_trending_data()
         trending_nfts = process_trending_nfts(nfts)
         if trending_nfts:
-            message = format_nft_message(user_preferences[user_id], trending_nfts)
-            await context.bot.send_photo(chat_id=user_id, photo=trending_nfts['thumb_url'], caption=message)
+            for nft in trending_nfts:
+                nft_message = format_nft_message(user_preferences[user_id], nft)
+                await context.bot.send_photo(chat_id=user_id, photo=nft['thumb_url'], caption=nft_message)
+            # message = format_nft_message(user_preferences[user_id], trending_nfts)
+            # await context.bot.send_photo(chat_id=user_id, photo=trending_nfts['thumb_url'], caption=message)
         else:
             await context.bot.send_message(chat_id=user_id, text="Failed to fetch trending NFTs.")
 
@@ -156,16 +162,16 @@ async def send_initial_messages(context: ContextTypes.DEFAULT_TYPE, user_id):
     await context.bot.send_message(chat_id=user_id, text=f"Fetched trending data !")
 
     if trending_coins:
-        for coin in trending_coins:
-            coin_message = format_coin_message(user_preferences[user_id], coin)
-            await context.bot.send_message(chat_id=user_id, text=coin_message) 
+         for coin in trending_coins:
+             coin_message = format_coin_message(user_preferences[user_id], coin)
+             await context.bot.send_photo(chat_id=user_id, photo=coin['thumb_url'], caption=coin_message)
     else:
         await context.bot.send_message(chat_id=user_id, text=f"Failed to fetch trending coins ")
 
     if trending_nfts:
         for nft in trending_nfts:
-            nft_message = format_nft_message(user_preferences[user_id], nft)
-            await context.bot.send_message(chat_id=user_id, text=nft_message)
+                nft_message = format_nft_message(user_preferences[user_id], nft)
+                await context.bot.send_photo(chat_id=user_id, photo=nft['thumb_url'], caption=nft_message)
     else:
         await context.bot.send_message(chat_id=user_id, text=f"Failed to fetch trending NFTs ")
 
@@ -180,8 +186,8 @@ application.add_handler(username_handler)
 application.run_polling()
 
 # Schedule the function to fetch and send trending NFTs and coins at 7:31pm and 7:31am
-schedule.every().day.at("07:30").do(send_coin_message)
-schedule.every().day.at("19:31").do(send_nft_message)
+schedule.every().day.at("22:59").do(send_coin_message)
+schedule.every().day.at("23:15").do(send_nft_message)
 
 while True:
     schedule.run_pending()
