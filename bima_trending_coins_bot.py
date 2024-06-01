@@ -53,7 +53,8 @@ def process_trending_coins(coins):
             "market_cap": coin_item_data['market_cap'],
             "total_volume": coin_item_data['total_volume'],
             "total_volume_btc": coin_item_data['total_volume_btc'],
-            "spark_link": coin_item_data['sparkline']
+            "spark_link": coin_item_data['sparkline'],
+            "thumb_url": coin_info['small'] 
         }
         trending_coins.append(coin_detail)
     return trending_coins
@@ -71,7 +72,8 @@ def process_trending_nfts(nfts):
             "floor_price_24h_percentage_change": nft_data['floor_price_in_usd_24h_percentage_change'],
             "h24_volume": nft_data['h24_volume'],
             "h24_average_sale_price": nft_data['h24_average_sale_price'],
-            "spark_link": nft_data['sparkline']
+            "spark_link": nft_data['sparkline'],
+            "thumb_url": nft['thumb'] 
         }
         trending_nfts.append(nft_detail)
     return trending_nfts
@@ -116,7 +118,7 @@ async def send_coin_message(context: ContextTypes.DEFAULT_TYPE):
         trending_coins = process_trending_coins(coins)
         if trending_coins:
             message = format_coin_message(user_preferences[user_id], trending_coins)
-            await context.bot.send_message(chat_id=user_id, text=message)
+            await context.bot.send_photo(chat_id=user_id, photo=trending_coins['thumb_url'], caption=message)
         else:
             await context.bot.send_message(chat_id=user_id, text="Failed to fetch trending coins.")
 
@@ -127,7 +129,7 @@ async def send_nft_message(context: ContextTypes.DEFAULT_TYPE):
         trending_nfts = process_trending_nfts(nfts)
         if trending_nfts:
             message = format_nft_message(user_preferences[user_id], trending_nfts)
-            await context.bot.send_message(chat_id=user_id, text=message)
+            await context.bot.send_photo(chat_id=user_id, photo=trending_nfts['thumb_url'], caption=message)
         else:
             await context.bot.send_message(chat_id=user_id, text="Failed to fetch trending NFTs.")
 
