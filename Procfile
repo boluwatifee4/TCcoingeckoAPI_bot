@@ -1,0 +1,1 @@
+web: python bima_trending_coins_bot.py
